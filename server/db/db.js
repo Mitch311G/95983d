@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
+require('dotenv').config();
 
-const db = new Sequelize(process.env.DATABASE_URL || "postgres://Mitchell:@localhost:5432/messenger", {
+const db = new Sequelize(process.env.DATABASE_URL || process.env.DATABASE_LOCAL, {
   logging: false
 });
 

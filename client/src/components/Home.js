@@ -82,7 +82,13 @@ const Home = ({ user, logout }) => {
           convo.id = message.conversationId;
         }
       });
-      setConversations([...conversations]);
+      setConversations((prev) =>
+        prev.map((convo) => {
+          const convoCopy = { ...convo };
+          convoCopy.messages = JSON.parse(JSON.stringify(convoCopy.messages));
+          return convoCopy;
+        })
+      );
     },
     [setConversations, conversations]
   );
@@ -107,7 +113,13 @@ const Home = ({ user, logout }) => {
           convo.latestMessageText = message.text;
         }
       });
-      setConversations([...conversations]);
+      setConversations((prev) =>
+        prev.map((convo) => {
+          const convoCopy = { ...convo };
+          convoCopy.messages = JSON.parse(JSON.stringify(convoCopy.messages));
+          return convoCopy;
+        })
+      );
     },
     [setConversations, conversations]
   );

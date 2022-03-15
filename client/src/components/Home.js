@@ -85,7 +85,7 @@ const Home = ({ user, logout }) => {
       setConversations((prev) =>
         prev.map((convo) => {
           const convoCopy = { ...convo };
-          convoCopy.messages = JSON.parse(JSON.stringify(convoCopy.messages));
+          convoCopy.messages = [ ...convoCopy.messages ];
           return convoCopy;
         })
       );
@@ -116,7 +116,7 @@ const Home = ({ user, logout }) => {
       setConversations((prev) =>
         prev.map((convo) => {
           const convoCopy = { ...convo };
-          convoCopy.messages = JSON.parse(JSON.stringify(convoCopy.messages));
+          convoCopy.messages = [ ...convoCopy.messages ];
           return convoCopy;
         })
       );

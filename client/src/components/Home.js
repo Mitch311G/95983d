@@ -73,6 +73,28 @@ const Home = ({ user, logout }) => {
     }
   };
 
+  const updateReadMessages = async (conversationId) => {
+    try {
+      const { data } = await axios.put('/api/messages', {conversationId});
+
+      conversations.forEach((convo) => {
+        if (convo.id === conversationId) {
+          convo.messages = data.messages
+        }
+      });
+
+      setConversations((prev) =>
+        prev.map((convo) => {
+          const convoCopy = { ...convo };
+          convoCopy.messages = [ ...convoCopy.messages ];
+          return convoCopy;
+        })
+      );
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   const addNewConvo = useCallback(
     (recipientId, message) => {
       conversations.forEach((convo) => {
@@ -223,6 +245,7 @@ const Home = ({ user, logout }) => {
           conversations={conversations}
           user={user}
           postMessage={postMessage}
+          updateReadMessages={updateReadMessages}
         />
       </Grid>
     </>

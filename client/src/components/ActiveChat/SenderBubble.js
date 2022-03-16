@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography, Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,10 +25,15 @@ const useStyles = makeStyles(() => ({
     background: '#F4F6FA',
     borderRadius: '10px 10px 0 10px',
   },
+  profilePic: {
+    height: 22,
+    width: 22,
+  }
 }));
 
-const SenderBubble = ({ time, text }) => {
+const SenderBubble = ({ time, message, otherUser, lastMessageId }) => {
   const classes = useStyles();
+  const { id, text, wasRead } = message;
 
   return (
     <Box className={classes.root}>
@@ -36,6 +41,9 @@ const SenderBubble = ({ time, text }) => {
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
+      {wasRead && id === lastMessageId &&
+        <Avatar alt={otherUser.username} src={otherUser.photoUrl} className={classes.profilePic}></Avatar>
+      }
     </Box>
   );
 };

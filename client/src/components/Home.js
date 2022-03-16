@@ -73,16 +73,29 @@ const Home = ({ user, logout }) => {
     }
   };
 
+  const sendReadMessages = (conversationId, messages) => {
+    socket.emit('read-messages', {conversationId, messages})
+  }
+
   const updateReadMessages = async (conversationId) => {
     try {
       const { data } = await axios.put('/api/messages', {conversationId});
+      const messages = data.messages;
+      markReadMessages({conversationId, messages});
+      sendReadMessages(conversationId, messages);
+    } catch(error) {
+      console.log(error)
+    }
+  };
 
+  const markReadMessages = useCallback(
+    (data) => {
+      const { conversationId, messages } = data;
       conversations.forEach((convo) => {
         if (convo.id === conversationId) {
-          convo.messages = data.messages
+          convo.messages = messages;
         }
       });
-
       setConversations((prev) =>
         prev.map((convo) => {
           const convoCopy = { ...convo };
@@ -90,10 +103,9 @@ const Home = ({ user, logout }) => {
           return convoCopy;
         })
       );
-    } catch(error) {
-      console.log(error)
-    }
-  }
+    },
+    [setConversations, conversations]
+  );
 
   const addNewConvo = useCallback(
     (recipientId, message) => {
@@ -185,6 +197,7 @@ const Home = ({ user, logout }) => {
     socket.on('add-online-user', addOnlineUser);
     socket.on('remove-offline-user', removeOfflineUser);
     socket.on('new-message', addMessageToConversation);
+    socket.on('read-messages', markReadMessages);
 
     return () => {
       // before the component is destroyed
@@ -192,8 +205,10 @@ const Home = ({ user, logout }) => {
       socket.off('add-online-user', addOnlineUser);
       socket.off('remove-offline-user', removeOfflineUser);
       socket.off('new-message', addMessageToConversation);
+      socket.off('read-messages', markReadMessages);
+
     };
-  }, [addMessageToConversation, addOnlineUser, removeOfflineUser, socket]);
+  }, [addMessageToConversation, addOnlineUser, removeOfflineUser, markReadMessages, socket]);
 
   useEffect(() => {
     // when fetching, prevent redirect

@@ -18,12 +18,37 @@ const useStyles = makeStyles((theme) => ({
     color: "#9CADC8",
     letterSpacing: -0.17,
   },
+  previewUnreadText: {
+    fontSize: 12,
+    color: "black",
+    letterSpacing: -0.17,
+    fontWeight: "bold",
+  },
+  unreadCount: {
+    height: 22,
+    width: 22,
+    fontSize: 14,
+    color: "white",
+    letterSpacing: -0.17,
+    fontWeight: "bold",
+    backgroundColor: " #3A8DFF",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 14
+  },
+  notification: {
+    display: "flex",
+    alignItems: "center",
+    marginRight: 20
+  }
 }));
 
-const ChatContent = ({ conversation }) => {
+const ChatContent = ({ conversation, user }) => {
   const classes = useStyles();
 
-  const { otherUser } = conversation;
+  const { otherUser, messages, unreadMessages } = conversation;
   const latestMessageText = conversation.id && conversation.latestMessageText;
 
   return (
@@ -32,10 +57,23 @@ const ChatContent = ({ conversation }) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography
+          className={
+            unreadMessages > 0 && messages[messages.length - 1].senderId !== user.id
+            ? classes.previewUnreadText
+            : classes.previewText
+          }
+        >
           {latestMessageText}
         </Typography>
       </Box>
+      {unreadMessages > 0 && messages[messages.length - 1].senderId !== user.id &&
+        <Box className={classes.notification}>
+          <Typography className={classes.unreadCount}>
+            {unreadMessages}
+          </Typography>
+        </Box>
+      }
     </Box>
   );
 };

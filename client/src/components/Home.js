@@ -94,6 +94,7 @@ const Home = ({ user, logout }) => {
       conversations.forEach((convo) => {
         if (convo.id === conversationId) {
           convo.messages = messages;
+          convo.unreadMessages = 0;
         }
       });
       setConversations((prev) =>
@@ -114,6 +115,7 @@ const Home = ({ user, logout }) => {
           convo.messages.push(message);
           convo.latestMessageText = message.text;
           convo.id = message.conversationId;
+          convo.unreadMessages += 1;
         }
       });
       setConversations((prev) =>
@@ -145,6 +147,7 @@ const Home = ({ user, logout }) => {
         if (convo.id === message.conversationId) {
           convo.messages.push(message);
           convo.latestMessageText = message.text;
+          convo.unreadMessages += 1;
         }
       });
       setConversations((prev) =>

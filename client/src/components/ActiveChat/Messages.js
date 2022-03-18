@@ -5,7 +5,10 @@ import moment from 'moment';
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  const lastMessageId = messages[messages.length - 1].id;
+  var lastMessageId;
+  if (messages.length > 0) {
+    lastMessageId = messages[messages.length - 1].id;
+  }
 
   return (
     <Box>

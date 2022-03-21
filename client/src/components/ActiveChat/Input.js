@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Input = ({ otherUser, conversationId, user, postMessage, updateReadMessages }) => {
+const Input = ({ otherUser, conversationId, user, postMessage, updateReadMessages, unreadMessages }) => {
   const classes = useStyles();
   const [text, setText] = useState('');
 
@@ -40,7 +40,9 @@ const Input = ({ otherUser, conversationId, user, postMessage, updateReadMessage
 
   const handleFocus = (event) => {
     event.preventDefault();
-    updateReadMessages(conversationId);
+    if (unreadMessages) {
+      updateReadMessages(conversationId);
+    }
   }
 
   return (

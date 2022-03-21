@@ -52,6 +52,20 @@ router.put('/', async (req, res, next) => {
     const readerId = req.user.id;
     const { conversationId } = req.body;
 
+    const conversation = await Conversation.findOne({
+      where: {
+        id: conversationId,
+        [Op.or]: {
+          user1Id: readerId,
+          user2Id: readerId,
+        }
+      }
+    })
+
+    if (!conversation) {
+      return res.sendStatus(403);
+    }
+
     await Message.update({ wasRead: true}, {
       where: {
         conversationId: {
@@ -70,7 +84,7 @@ router.put('/', async (req, res, next) => {
       order: [["createdAt", "ASC"]]
     });
 
-    res.json({ messages } )
+    res.json({ messages })
   } catch (error) {
     next(error);
   }

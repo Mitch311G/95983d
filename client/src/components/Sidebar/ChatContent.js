@@ -39,6 +39,14 @@ const ChatContent = ({ conversation, user }) => {
   const { otherUser, messages, unreadMessages } = conversation;
   const latestMessageText = conversation.id && conversation.latestMessageText;
 
+  const getLastSenderId = (messages) => {
+    if (messages.length) {
+      return messages[messages.length - 1].senderId;
+    }
+  }
+
+  let lastSender = getLastSenderId(messages);
+
   return (
     <Box className={classes.root}>
       <Box>
@@ -47,7 +55,7 @@ const ChatContent = ({ conversation, user }) => {
         </Typography>
         <Typography
           className={
-            unreadMessages > 0 && messages[messages.length - 1].senderId !== user.id
+            unreadMessages > 0 && lastSender !== user.id
             ? classes.previewUnreadText
             : classes.previewText
           }
@@ -55,12 +63,14 @@ const ChatContent = ({ conversation, user }) => {
           {latestMessageText}
         </Typography>
       </Box>
-      <Badge
+      {unreadMessages > 0 && lastSender !== user.id &&
+        <Badge
         badgeContent={unreadMessages}
         color='primary'
         classes={{badge: classes.badge}}
-      >
-      </Badge>
+        >
+        </Badge>
+      }
     </Box>
   );
 };

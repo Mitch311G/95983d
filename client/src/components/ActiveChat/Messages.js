@@ -5,9 +5,18 @@ import moment from 'moment';
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  var lastMessageId;
+
+  const findLastReadId = (messages) => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].wasRead && messages[i].senderId === userId) {
+        return messages[i].id;
+      }
+    }
+  }
+
+  let lastRead;
   if (messages.length > 0) {
-    lastMessageId = messages[messages.length - 1].id;
+    lastRead = findLastReadId(messages);
   }
 
   return (
@@ -21,7 +30,7 @@ const Messages = (props) => {
             time={time}
             message={message}
             otherUser={otherUser}
-            lastMessageId={lastMessageId}
+            lastRead={lastRead}
           />
         ) : (
           <OtherUserBubble

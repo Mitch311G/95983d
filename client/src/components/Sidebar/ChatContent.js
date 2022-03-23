@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,13 +18,34 @@ const useStyles = makeStyles((theme) => ({
     color: "#9CADC8",
     letterSpacing: -0.17,
   },
+  previewUnreadText: {
+    fontSize: 12,
+    color: "black",
+    letterSpacing: -0.17,
+    fontWeight: "bold",
+  },
+  badge: {
+    fontSize: 14,
+    letterSpacing: -0.17,
+    fontWeight: "bold",
+    marginRight: 40,
+    top: "50%"
+  },
 }));
 
-const ChatContent = ({ conversation }) => {
+const ChatContent = ({ conversation, user }) => {
   const classes = useStyles();
 
-  const { otherUser } = conversation;
+  const { otherUser, messages, unreadMessages } = conversation;
   const latestMessageText = conversation.id && conversation.latestMessageText;
+
+  const getLastSenderId = (messages) => {
+    if (messages.length) {
+      return messages[messages.length - 1].senderId;
+    }
+  }
+
+  let lastSender = getLastSenderId(messages);
 
   return (
     <Box className={classes.root}>
@@ -32,10 +53,24 @@ const ChatContent = ({ conversation }) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography
+          className={
+            unreadMessages > 0 && lastSender !== user.id
+            ? classes.previewUnreadText
+            : classes.previewText
+          }
+        >
           {latestMessageText}
         </Typography>
       </Box>
+      {unreadMessages > 0 && lastSender !== user.id &&
+        <Badge
+        badgeContent={unreadMessages}
+        color='primary'
+        classes={{badge: classes.badge}}
+        >
+        </Badge>
+      }
     </Box>
   );
 };

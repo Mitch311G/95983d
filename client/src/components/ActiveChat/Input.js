@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Input = ({ otherUser, conversationId, user, postMessage }) => {
+const Input = ({ otherUser, conversationId, user, postMessage, updateReadMessages, unreadMessages }) => {
   const classes = useStyles();
   const [text, setText] = useState('');
 
@@ -38,6 +38,13 @@ const Input = ({ otherUser, conversationId, user, postMessage }) => {
     setText('');
   };
 
+  const handleFocus = (event) => {
+    event.preventDefault();
+    if (unreadMessages) {
+      updateReadMessages(conversationId);
+    }
+  }
+
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
       <FormControl fullWidth hiddenLabel>
@@ -48,6 +55,7 @@ const Input = ({ otherUser, conversationId, user, postMessage }) => {
           value={text}
           name="text"
           onChange={handleChange}
+          onFocus={handleFocus}
         />
       </FormControl>
     </form>
